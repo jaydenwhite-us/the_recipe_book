@@ -1,0 +1,38 @@
+2
+6
+6
+4
+a00 a01 a02 a03       x00       x01   x02     y00   y01   y02   y03
+a10 a11 a12 a13       x10       x11   x12     y10   y11   y12   y13
+a20 a21 a22 a23   *   x20   u   x21 u x22   u y20   y21   y22   y23     =   
+a30 a31 a32 a33       x30       x31   x32     y30   y31   y32   y33
+
+b00       b01   b02     1   0   0   0
+b10   u   b11 u b12   u 0   1   0   0
+b20       b21   b22     0   0   1   0      
+b30       b31   b32     0   0   0   1
+
+
+Multiplication
+4 x 4 * 4 x 7 Resulting in 4 x 7 matrix
+
+A * x0
+(a00 *x00 + a01 * x10 + a02 * x20  + a03 * x30),
+(a10 *x00 + a11 * x10 + a12 * x20  + a13 * x30),
+(a20 *x00 + a21 * x10 + a22 * x20  + a23 * x30), 
+(a30 *x00 + a31 * x10 + a32 * x20  + a33 * x30),  
+
+A*x0 u A*x1 u A*x2 u A*y0 u A*y1 u A*y2 u A*y3 
+(A*x0) u (A*x1) u (A*x2) u (A*y0 u A*y1 u A*y2 u A*y3) 
+A*x0  u A*x1 u A*x2 u A * (y0 u y1 u y2 u y3)
+A*x0  u A*x1 u A*x2 u A * (Y) = b0 u b1 u b2 u Identity
+A*x0 = b0
+A*x1 = b1
+A*x2 = b2
+A*Y
+
+search_location_gates
+When ipiv is set by icol, never irow;
+
+traverse column | traverse row 
+1             1

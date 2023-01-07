@@ -1,0 +1,2 @@
+[workspace]
+members=["matrix", "gauss_jordan_elimination"]
