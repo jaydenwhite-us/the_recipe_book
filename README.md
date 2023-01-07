@@ -1,6 +1,6 @@
 # Numerical Recipes in Rust
 
-> A translation of Numerical Recipes in C 2nd Edition into Rust,
+> A translation of Numerical Recipes in C 2nd Edition into Rust
 
 ## How to Use
 
