@@ -16,7 +16,7 @@ The authors of Numerical Recipes in C intentionally avoid modules (citation need
 > 3. Reducing nesting where possible.
 > 4. Boolean flags provided to toggle some optimizations.
 
-Tools 1,2 and 3. are trivial. They `should` reduce the human working-memory necessary to understand how a program is traversing the allocated computer memory. The fourth tool requires explanation.
+Tools 1,2 and 3. are trivial. They _should_ reduce the human working-memory necessary to understand how a program is traversing the allocated computer memory. The fourth tool requires explanation.
 
 ### Recognizing Optimization
 
