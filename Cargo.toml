@@ -2,5 +2,5 @@
 members=[
   "matrix", 
   "gauss_jordan_elimination", 
-  
+  "lu_decomposition"
   ]

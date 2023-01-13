@@ -2,11 +2,19 @@ fn main() {
     use gauss_jordan_elimination::gauss_jordan;
     use matrix::Matrix;
 
-    let mut a = Matrix::from(vec![vec![3.0, -2.0], vec![6.0, 4.0]]);
-    let mut i = Matrix::identity(a.rows());
+    let mut a = Matrix::from(vec![
+        vec![1.0, 0.0, 0.0],
+        vec![0.0, 1.0, 0.0],
+        vec![0.0, 0.0, 1.0],
+    ]);
+    let mut b = Matrix::from(vec![
+        vec![1.0, 0.0, 0.0],
+        vec![0.0, 0.0, 0.0],
+        vec![0.0, 0.0, 0.0],
+    ]);
     let return_inverse_in_a = false;
-    gauss_jordan(&mut a, &mut i, return_inverse_in_a);
-    dbg!(&a.values, &i.values);
+    gauss_jordan(&mut a, &mut b, return_inverse_in_a);
+    dbg!(&b.values);
 
-    assert_eq!(a, Matrix::identity(a.rows()));
+    // assert_eq!(a, Matrix::identity(a.rows()));
 }

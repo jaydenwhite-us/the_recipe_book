@@ -3,7 +3,7 @@ fn new_matrix() {
     use matrix::Matrix;
     let matrix = Matrix::new(2, 2);
     let assertion = vec![vec![0.0; 2]; 2];
-    assert_eq!(matrix.values, assertion);
+    assert_eq!(*matrix.values(), assertion);
     assert_eq!(matrix.columns(), 2);
     assert_eq!(matrix.rows(), 2);
 }
@@ -12,7 +12,7 @@ fn square_matrix() {
     use matrix::Matrix;
     let matrix = Matrix::square(2);
     let assertion = vec![vec![0.0; 2]; 2];
-    assert_eq!(matrix.values, assertion);
+    assert_eq!(*matrix.values(), assertion);
     assert_eq!(matrix.columns(), 2);
     assert_eq!(matrix.rows(), 2);
 }
@@ -21,7 +21,7 @@ fn identity_matrix() {
     use matrix::Matrix;
     let identity = Matrix::identity(3);
     assert_eq!(
-        identity.values,
+        *identity.values(),
         vec![
             vec![1.0, 0.0, 0.0],
             vec![0.0, 1.0, 0.0],
@@ -100,4 +100,17 @@ fn swap_columns() {
         vec![1.0, -2.0, 2.0],
     ]);
     assert_eq!(matrix, assertion_matrix);
+}
+
+#[test]
+fn return_valid_row_length() {
+    use matrix::Matrix;
+    let mut matrix = Matrix::from(vec![
+        vec![2.0, 1.0, -1.0],
+        vec![-3.0, -1.0, 2.0],
+        vec![-2.0, 1.0, 2.0],
+    ]);
+    matrix.values[0].push(1.0);
+
+    assert_eq!(matrix.columns(), 4);
 }

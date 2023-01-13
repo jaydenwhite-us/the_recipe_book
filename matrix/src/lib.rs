@@ -1,9 +1,11 @@
+///A nested vector of type f32.
+/// ### Arguments
+///
 #[derive(Debug, PartialEq)]
 pub struct Matrix {
     pub values: Vec<Vec<f32>>,
     rows: usize,
     columns: usize,
-    column_first: bool,
 }
 
 impl Matrix {
@@ -17,16 +19,18 @@ impl Matrix {
             values,
             rows: number_of_rows,
             columns: number_of_elements,
-            column_first: false,
         }
     }
+
     pub fn new(rows: usize, columns: usize) -> Self {
         Matrix {
             values: vec![vec![0.0; columns.into()]; rows.into()],
             rows,
             columns,
-            column_first: false,
         }
+    }
+    pub fn values(&self) -> &Vec<Vec<f32>> {
+        &self.values
     }
 
     pub fn square(size: usize) -> Self {
@@ -34,7 +38,6 @@ impl Matrix {
             values: vec![vec![0.0; size.into()]; size.into()],
             rows: size,
             columns: size,
-            column_first: false,
         }
     }
     pub fn identity(size: usize) -> Self {
@@ -44,15 +47,53 @@ impl Matrix {
         }
         return matrix;
     }
-
+    /// Returns the number of rows.
+    ///
+    /// Especially useful when working with square matrices.
+    ///
     pub fn rows(&self) -> usize {
-        self.rows
+        self.values.len()
+    } //(O(1))
+
+    /// Returns the length of the largest row as the number of columns. `Use with caution.`
+    ///
+    /// # The Warning
+    /// The value returned from columns may not be valid for every row.
+    /// Rows in a Matrix are allowed to differ in length, leading to a mangled Matrix.
+    /// Attempting to assign to an unallocated location in a Matrix will result in an out of bounds exception.
+    ///
+    /// Complexity: O(n)
+    /// Where complexity is a concern, see columns_unchecked()
+    pub fn columns(&self) -> usize {
+        let mut longest_row: usize = 0;
+        for row in 0..self.values().len() {
+            if self.values[row].len() > longest_row {
+                longest_row = self.values().len();
+            }
+        }
+        longest_row
     }
 
-    pub fn columns(&self) -> usize {
+    /// Returns the unchecked value of columns.
+    ///
+    /// # The Warning:
+    /// The value returned from columns may not be valid for every row.
+    /// Rows in a Matrix are allowed to differ in length, leading to a mangled Matrix.
+    /// Meaning it is possible for a row length to be shorter or longer than the value returned from columns_unchecked().
+    /// Attempting to assign to an unallocated location in a Matrix will result in an out of bounds exception.
+    ///
+    /// Complexity: O(1)
+    pub fn columns_unchecked(&self) -> usize {
         self.columns
     }
 
+    /// Returns true if the rows of the Matrix are different lengths.
+    pub fn is_mangled(&self) -> bool {
+        let longest = self.values[0].len();
+        self.values.iter().all(|row| row.len() == longest)
+    }
+
+    /// Returns maximum value in a column.
     pub fn column_max(&self, column: usize) -> (f32, (usize, usize)) {
         let mut row_of_largest: usize = 0;
         //Search specified column for index of largest.
@@ -69,6 +110,7 @@ impl Matrix {
         )
     }
 
+    /// Returns maximum value in a row.
     pub fn row_max(&self, row: usize) -> (f32, (usize, usize)) {
         let mut col_of_largest: usize = 0;
         //Search specified column for index of largest.
@@ -82,6 +124,7 @@ impl Matrix {
         (self.values[row][col_of_largest], (row, col_of_largest))
     }
 
+    /// Takes a tuple (usize, usize) and attempts swap rows in the Matrix. Will panic if index is out of bounds.
     pub fn swap_rows(&mut self, rows: (usize, usize)) {
         for col in 0..self.columns() {
             let temp = self.values[rows.0][col];
@@ -90,16 +133,19 @@ impl Matrix {
         }
     }
 
+    ///Multiply all elements in a row by some scalar value.
     pub fn scale_row(&mut self, row: usize, scale: f32) {
         for element in &mut self.values[row][0..] {
             *element *= scale;
         }
     }
+    /// Add some addend to all elements in a row.
     pub fn add_to_row(&mut self, row: usize, addend: f32) {
         for element in &mut self.values[row][0..] {
-            *element -= addend;
+            *element += addend;
         }
     }
+    /// Takes a tuple (usize, usize) and attempts swap columns in the Matrix. Will panic if index is out of bounds.
     pub fn swap_columns(&mut self, columns: (usize, usize)) {
         for row in &mut self.values {
             let temp = row[columns.0];
@@ -107,17 +153,9 @@ impl Matrix {
             row[columns.1] = temp;
         }
     }
-
+    ///Appends a row to the Matrix
     pub fn new_row(&mut self) {
         self.values.push(vec![0.0; self.columns.into()]);
         self.rows = self.rows + 1;
-    }
-
-    pub fn new_column(mut self) -> Self {
-        for row in &mut self.values {
-            row.push(0.0);
-        }
-        self.columns = self.columns + 1;
-        self
     }
 }
