@@ -4,23 +4,20 @@ pub enum Error {
     SingularMatrix,
 }
 
-///Performs LU decomposition in place on a matrix `A`
+///Performs LU decomposition in place on a matrix A
 ///
 ///### Usage
-///    To be used with Crout's algorithm when solving right hand side columns in series or parellel.
-///    Returns the parity for use in calculating the determinant as an isize,
-///    and the permutation of the matrix as a vector.
+/// To be used with Crouts algorithm when solving right hand side columns in series or parellel.
+/// Returns the parity for use in calculating the determinant as an isize,
+/// and the permutation of the matrix as a vector.
 /// ```
 /// //Calculate the LU Decomposition
-///    use lu_decomposition::{decompose, solve};
+///    use lu_decomposition::{decompose, crout};
 ///    let mut matrix = matrix::Matrix::from(vec![vec![3.0, -2.0], vec![6.0, 4.0]]);
-///    let mut matrix_b = matrix::Matrix::identity(2);
 ///    let solution = matrix::Matrix::from(vec![vec![3.0, -2.0], vec![2.0, 8.0]]);
 ///    let result = decompose(&mut matrix);
 ///    assert!(result.is_ok());
-///    let (permutation, ..) = result.unwrap();
-///    solve(&matrix, &permutation, &mut matrix_b);
-///    assert_eq!(matrix_b, solution);
+///    assert_eq!(matrix, solution);
 /// ```
 pub fn decompose(a: &mut crate::matrix::Matrix) -> Result<(Vec<usize>, isize), Error> {
     let mut scalars = vec![1.0; a.values.len()];
@@ -90,18 +87,17 @@ pub fn decompose(a: &mut crate::matrix::Matrix) -> Result<(Vec<usize>, isize), E
     Ok((operations, parity))
 }
 
-///Performs Crout's algorithm on an LU decomposed matrix, A,  and a right hand side matrix B.
-///
-/// ### Arguments
-///     a: a left hand side decomposed matrix. Use [lu_decomposition::decompose]
-///     permutation: The row-wise permutation of `a` as a vector,
+///Performs Crouts algorithm on an LU decomposed matrix, A,  and a right hand side matrix B.
+///### Arguments
+///     a: a left hand side decomposed matrix.
+///     permutation: The row-wise permutation of the variable a as a vector
 ///     b: right hand side matrix b.
 ///### Usage
 /// Returns in place of `b` a solution vector that is not permutated.
 /// Does not check for compatibility, or mangled matrix. Panics on out of bounds.
 /// ```
 /// //Calculate the inverse
-///    use lu_decomposition::{decompose, solve};
+///    use lu_decomposition::{decompose, crout};
 ///    let mut matrix = matrix::Matrix::from(vec![vec![3.0, -2.0], vec![6.0, 4.0]]);
 ///    let mut matrix_b = matrix::Matrix::identity(2);
 ///    let solution = matrix::Matrix::from(vec![
@@ -111,7 +107,7 @@ pub fn decompose(a: &mut crate::matrix::Matrix) -> Result<(Vec<usize>, isize), E
 ///    let result = decompose(&mut matrix);
 ///    assert!(result.is_ok());
 ///    let (permutation, ..) = result.unwrap();
-///    solve(&matrix, &permutation, &mut matrix_b);
+///    crout(&matrix, &permutation, &mut matrix_b);
 ///    assert_eq!(matrix_b, solution);
 /// ```
 pub fn crout(a: &matrix::Matrix, permutation: &Vec<usize>, b: &mut matrix::Matrix) {
@@ -123,7 +119,7 @@ pub fn crout(a: &matrix::Matrix, permutation: &Vec<usize>, b: &mut matrix::Matri
     }
 }
 
-///Performs the forward substitution step of Crout's algorithm. Returns in place of `b`
+///Performs the forward substitution step of Crout\'s algorithm. Returns in place of `b`
 ///a solution vector that is permutated by A's permutation.
 fn forward_substitution(a: &matrix::Matrix, permutation: &Vec<usize>, b: &mut matrix::Matrix) {
     for column in 0..b.columns_unchecked() {
@@ -142,7 +138,7 @@ fn forward_substitution(a: &matrix::Matrix, permutation: &Vec<usize>, b: &mut ma
 }
 
 ///Performs the backwards substitution step of Crout's algorithm. Returns in place of `b`
-///a solution vector that is not permutated. Primarily for testing. Use solve when hoping to apply Crout's.
+///a solution vector that is not permutated. Primarily for testing. Use crout when hoping to apply Crout's.
 fn backward_substitution(a: &matrix::Matrix, b: &mut matrix::Matrix) {
     //Allow for multi dimensional matrices solved one column at a time.
 
@@ -245,4 +241,16 @@ fn backward_substitution_2x2() {
     forward_substitution(&matrix, &permutation, &mut b);
     backward_substitution(&matrix, &mut b);
     assert_eq!(b, permutated_solution);
+}
+
+#[test]
+#[should_panic]
+fn forward_substitution_2x2_complex() {
+    todo!();
+}
+
+#[test]
+#[should_panic]
+fn backward_substitution_2x2_complex() {
+    todo!();
 }
