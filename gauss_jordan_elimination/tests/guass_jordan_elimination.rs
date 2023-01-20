@@ -20,6 +20,6 @@ fn return_inverse_in_place_of_a() {
         vec![4.0 / 24.0, 2.0 / 24.0],
         vec![-6.0 / 24.0, 3.0 / 24.0],
     ]);
-    gauss_jordan(&mut matrix_a, &mut matrix_b, true);
+    gauss_jordan(&mut matrix_a, &mut matrix_b, true); //set inverse flag to true.
     assert_eq!(matrix_a, solution);
 }

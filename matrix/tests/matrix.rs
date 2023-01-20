@@ -43,23 +43,23 @@ fn from_vector() {
 }
 
 #[test]
-fn largest_in_column() {
+fn column_abs_max() {
     use matrix::Matrix;
     let mut matrix = Matrix::square(2);
     let target_col = 0;
-    matrix.values[1][target_col] = 2.0;
+    matrix.values[1][target_col] = -2.0;
 
-    let (largest, (x, y)) = matrix.column_max(target_col);
+    let (largest, (x, y)) = matrix.column_abs_max(target_col);
     assert_eq!(largest, 2.0);
     assert_eq!((1, 0), (x, y));
 }
 #[test]
-fn largest_in_row() {
+fn row_abs_max() {
     use matrix::Matrix;
     let mut matrix = Matrix::square(2);
     let target_row = 1;
-    matrix.values[target_row][1] = 2.0;
-    let (largest, (x, y)) = matrix.row_max(target_row);
+    matrix.values[target_row][1] = -2.0;
+    let (largest, (x, y)) = matrix.row_abs_max(target_row);
     assert_eq!(largest, 2.0);
     assert_eq!((1, 1), (x, y));
 }

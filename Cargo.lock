@@ -12,6 +12,9 @@ dependencies = [
 [[package]]
 name = "lu_decomposition"
 version = "0.1.0"
+dependencies = [
+ "matrix",
+]
 
 [[package]]
 name = "matrix"

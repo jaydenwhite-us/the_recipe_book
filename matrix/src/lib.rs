@@ -12,6 +12,7 @@ impl Matrix {
     pub fn from(values: Vec<Vec<f32>>) -> Self {
         let number_of_rows = values.len();
         let number_of_elements = values[0].len();
+
         for row in &values {
             assert_eq!(row.len(), number_of_elements, "Rows have differing lengths");
         }
@@ -33,6 +34,7 @@ impl Matrix {
         &self.values
     }
 
+    ///
     pub fn square(size: usize) -> Self {
         Matrix {
             values: vec![vec![0.0; size.into()]; size.into()],
@@ -40,6 +42,8 @@ impl Matrix {
             columns: size,
         }
     }
+
+    ///Return an identity matrix of size x size
     pub fn identity(size: usize) -> Self {
         let mut matrix = Matrix::square(size);
         for x in 0..matrix.rows() {
@@ -68,7 +72,7 @@ impl Matrix {
         let mut longest_row: usize = 0;
         for row in 0..self.values().len() {
             if self.values[row].len() > longest_row {
-                longest_row = self.values().len();
+                longest_row = self.values()[row].len();
             }
         }
         longest_row
@@ -90,11 +94,11 @@ impl Matrix {
     /// Returns true if the rows of the Matrix are different lengths.
     pub fn is_mangled(&self) -> bool {
         let longest = self.values[0].len();
-        self.values.iter().all(|row| row.len() == longest)
+        !self.values.iter().all(|row| row.len() == longest)
     }
 
-    /// Returns maximum value in a column.
-    pub fn column_max(&self, column: usize) -> (f32, (usize, usize)) {
+    /// Returns the maximum value in a column and its location in a tuple (max (row, column)).
+    pub fn column_abs_max(&self, column: usize) -> (f32, (usize, usize)) {
         let mut row_of_largest: usize = 0;
         //Search specified column for index of largest.
         for row in 0..self.rows() {
@@ -103,25 +107,26 @@ impl Matrix {
             }
             row_of_largest = row;
         }
-        //Return tuple
         (
-            self.values[row_of_largest][column],
+            self.values[row_of_largest][column].abs(),
             (row_of_largest, column),
         )
     }
 
-    /// Returns maximum value in a row.
-    pub fn row_max(&self, row: usize) -> (f32, (usize, usize)) {
+    /// Returns the maximum value in a row and its location in a tuple (max (row, column)).
+    pub fn row_abs_max(&self, row: usize) -> (f32, (usize, usize)) {
         let mut col_of_largest: usize = 0;
+        let mut largest = self.values[row][col_of_largest].abs();
         //Search specified column for index of largest.
         for col in 0..self.columns() {
-            if self.values[row][col].abs() <= self.values[row][col_of_largest].abs() {
+            let current = self.values[row][col].abs();
+            if current <= largest {
                 continue;
             }
+            largest = current;
             col_of_largest = col;
         }
-        //Return tuple
-        (self.values[row][col_of_largest], (row, col_of_largest))
+        (largest, (row, col_of_largest))
     }
 
     /// Takes a tuple (usize, usize) and attempts swap rows in the Matrix. Will panic if index is out of bounds.
